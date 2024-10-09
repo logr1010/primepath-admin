@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html,body, #root{
+    font-family: "Poppins, sans-serif !important";
+    background-color: #F5F5F5;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+    transition-delay: background-color 5000s, color 5000s;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    border: 2px solid #DADADA;
+  }
+  
+  
+  /* tells the browser how the scrollable  
+  handle would look like */
+  
+  ::-webkit-scrollbar-thumb {
+    background: #DADADA;
+    height: 10px;
+    width: 110px;
+  }
+  /* tells the browser how will the  
+  path of the handle will look like */
+  
+  ::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  ::-webkit-calendar-picker-indicator {
+    /* background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png) center/80% no-repeat; */
+    color: #eee;
+    position: absolute;
+    right: 10px; /* Adjust position as needed */
+    top: 50%;
+    transform: translateY(-50%);
+   
+    cursor: pointer;
+}
+
+ 
