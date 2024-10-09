@@ -23,7 +23,7 @@ export default function Search(props) {
     }
   }
   return (
-    <Box size="small" className='h-[40px] flex border border-gray-300 rounded-md'>
+    <Box size="small" className='h-[40px] flex border border-gray-300 rounded-md w-full md:w-auto'>
       <IconButton>
         <SearchIcon/>
       </IconButton>
