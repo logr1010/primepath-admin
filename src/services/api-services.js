@@ -2,6 +2,7 @@ import axios from "axios";
 
 export let _localStorage = {};
 
+
 export const updateLocalStorage = async (data) => {
   // UPDATE LOCAL STORAGE
 
@@ -9,7 +10,7 @@ export const updateLocalStorage = async (data) => {
 
   if (localStorage) {
     localStorage.removeItem("pp_admin");
-    window.location.replace("/");
+    // window.location.replace("/");
   }
 };
 
@@ -25,6 +26,11 @@ export const baseUrl = "https://api.primepathlogistics.in/api/";
 // export const baseUrl = `http://192.168.1.41:3100/api/`;
 
 // INTERCEPTORS FOR REQUESTS
+
+export const containers = {
+  offer: `${baseUrl}Uploads/offerImages/download/`,
+  image: `${baseUrl}Uploads/image/download/`
+}
 
 axios.interceptors.request.use(
   function (config) {

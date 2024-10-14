@@ -1,16 +1,8 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Button, Skeleton, Typography } from '@mui/material';
 import Search from '../../components/Search';
-import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { IconButton, CircularProgress, Box } from '@mui/material';
-import UsersDialog from '../../dialogs/UsersDialog';
-import Delete from '../../dialogs/Delete';
 import { useNavigate } from 'react-router-dom';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import { get } from '../../services/api-services';
 import CustomSnackbar from '../../modules/CustomSnackbar';
 import debounce from 'lodash/debounce';
@@ -18,9 +10,14 @@ import DynamicTable from '../../components/DynamicTable';
 
 const columns = [
 	{
-		id: 'name',
-		label: 'Name',
-		minWidth: 170
+		id: 'firstName',
+		label: 'First Name',
+		minWidth: 80
+	},
+	{
+		id: 'lastName',
+		label: 'Last Name',
+		minWidth: 80
 	},
 	{
 		id: 'mobile',
@@ -30,13 +27,13 @@ const columns = [
 	{
 		id: 'email',
 		label: 'Email',
-		minWidth: 170,
+		minWidth: 120,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
 		id: 'gender',
 		label: 'Gender',
-		minWidth: 170,
+		minWidth: 60,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
@@ -49,11 +46,11 @@ const columns = [
 	},
 ];
 
-export default function Users() {
-	document.title = "Users"
+export default function LocalPickups() {
+	document.title = "Local Pickups"
 	const [course, setCourse] = useState({ name: '' });
 	const [courseId, setCourseId] = useState('');
-	const [users, setUsers] = useState([]);
+	const [pickups, setPickups] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState('');
 	const [open, setOpen] = useState(false);
@@ -65,54 +62,40 @@ export default function Users() {
 		severity: "",
 	});
 	const navigate = useNavigate()
-	const onEditUser = async (value) => {
-		setCourse({ name: value?.name });
-		setCourseId(value?.id)
-		setOpen(true);
-	};
-	const onDeleteUser = async (value) => {
-		setCourseId(value?.id)
-		setDeleteOpen(true);
-	};
-	const getUsers = async (search) => {
+
+	const getPickups = async (search) => {
 		setLoading(true)
 		const filter = search ? JSON.stringify({
 			where: {
 				"name": { "like": `${search}`, "options": "i" }
 			},
-			order: "created DESC" // sort by createdAt in descending order
-		}) : JSON.stringify({ order: "created DESC" })
-		const res = await get(`Customers?filter=${filter}`);
+			order: "createdAt DESC" // sort by createdAt in descending order
+		}) : JSON.stringify({ order: "createdAt DESC" })
+		const res = await get(`Partners?filter=${filter}`);
 		if (res?.statusCode === 200) {
-			setUsers(res?.data)
+			setPickups(res?.data)
 		}
 		setLoading(false)
 	}
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
 	};
-	const delay = useCallback(debounce(getUsers, 300), []);
+	const delay = useCallback(debounce(getPickups, 300), []);
 	useEffect(() => {
 		delay(search)
 	}, [search])
 	return (
-		<div className='flex-1  flex flex-col gap-4 px-4 py-6'>
-			<div className='flex flex-col static gap-4 md:justify-between md:flex-row '>
-				<Typography variant='h1'> Users</Typography>
-				<div className='flex gap-2 justify-end'>
-					<Search handleSearch={handleSearch} name='users' />
-				</div>
-			</div>
-			<Box className='flex flex-col flex-1 shadow-md overflow-hidden' ref={containerRef} sx={{ maxHeight: containerRef?.current?.offsetHeight, overflow: 'auto' }}>
+		<div className='h-full' ref={containerRef}>
+			<Box className='flex flex-col flex-1 shadow-md overflow-hidden' sx={{ maxHeight: containerRef?.current?.offsetHeight, overflow: 'auto' }}>
 				<DynamicTable
 					height={containerRef?.current?.offsetHeight}
 					loading={loading}
 					columns={columns}
-					rows={users}
+					rows={pickups}
+					rowColorCondition={(partner) => partner?.reject ? 'FFCDD2' : partner?.onBoarding?.toUpperCase() == 'DL' && 'FFE6A5'}
+					onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
 				/>
 			</Box>
-			<UsersDialog open={open} setOpen={setOpen} courseId={courseId} setCourseId={setCourseId} getUsers={getUsers} course={course} setCourse={setCourse} snackbar={snackbar} setSnackbar={setSnackbar} />
-			<Delete name="User" deleteOpen={deleteOpen} setDeleteOpen={setDeleteOpen} id={courseId} setCourseId={setCourseId} getUsers={getUsers} endPoint='courses' snackbar={snackbar} setSnackbar={setSnackbar} />
 			<CustomSnackbar
 				openSnackbar={snackbar.openSnackbar}
 				closeSnackbar={() =>

@@ -10,9 +10,14 @@ import DynamicTable from '../../components/DynamicTable';
 
 const columns = [
 	{
-		id: 'name',
-		label: 'Name',
-		minWidth: 170
+		id: 'firstName',
+		label: 'First Name',
+		minWidth: 80
+	},
+	{
+		id: 'lastName',
+		label: 'Last Name',
+		minWidth: 80
 	},
 	{
 		id: 'mobile',
@@ -22,13 +27,13 @@ const columns = [
 	{
 		id: 'email',
 		label: 'Email',
-		minWidth: 170,
+		minWidth: 120,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
 		id: 'gender',
 		label: 'Gender',
-		minWidth: 170,
+		minWidth: 60,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
@@ -72,8 +77,8 @@ export default function PickupAgents() {
 			where: {
 				"name": { "like": `${search}`, "options": "i" }
 			},
-			order: "created DESC" // sort by createdAt in descending order
-		}) : JSON.stringify({ order: "created DESC" })
+			order: "createdAt DESC" // sort by createdAt in descending order
+		}) : JSON.stringify({ order: "createdAt DESC" })
 		const res = await get(`Partners?filter=${filter}`);
 		if (res?.statusCode === 200) {
 			setPickupAgents(res?.data)
@@ -88,7 +93,7 @@ export default function PickupAgents() {
 		delay(search)
 	}, [search])
 	return (
-		<div className='flex-1  flex flex-col gap-4 '>
+		<div className='flex-1 flex flex-col gap-4 px-4 py-6'>
 			<div className='flex flex-col static gap-4 md:justify-between md:flex-row '>
 				<Typography variant='h1'> PickupAgents</Typography>
 				<div className='flex gap-2 justify-end'>
@@ -101,6 +106,8 @@ export default function PickupAgents() {
 					loading={loading}
 					columns={columns}
 					rows={pickupAgents}
+					rowColorCondition={(partner) => partner?.reject ? 'FFCDD2' : partner?.onBoarding?.toUpperCase() == 'DL' && 'FFE6A5'}
+					onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
 				/>
 			</Box>
 			<CustomSnackbar

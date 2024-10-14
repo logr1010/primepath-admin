@@ -14,6 +14,9 @@ import Lecture from '../screens/users/Lecture';
 import DynamicTable from '../components/DynamicTable';
 import PickupAgentsIndex from '../screens/pickupagents/PickupAgentsIndex';
 import PickupAgents from '../screens/pickupagents/PickupAgents';
+import PickupAgentDetails from '../screens/pickupagents/PickupAgentDetails';
+import PickupsIndex from '../screens/pickups/PickupIndex';
+import Pickups from '../screens/pickups/Pickups';
 export default function MainRoutes() {
   return (
     <Routes>
@@ -27,8 +30,13 @@ export default function MainRoutes() {
           <Route path='subjects' element={<Subject />} />
           <Route path='subjects/lecture' element={<Lecture />} />
         </Route>
+        <Route path='pickups' element={<PickupsIndex />}>
+          <Route path='' element={<Pickups />} />
+          {/* <Route path=':id' element={<PickupAgentDetails />} /> */}
+        </Route>
         <Route path='pickup-agents' element={<PickupAgentsIndex />}>
           <Route path='' element={<PickupAgents />} />
+          <Route path=':id' element={<PickupAgentDetails />} />
         </Route>
         <Route path='students' element={<StudentsIndex />}>
           <Route path='' element={<Students />} />

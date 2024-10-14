@@ -5,6 +5,8 @@
 html,body, #root{
     font-family: "Poppins, sans-serif !important";
     background-color: #F5F5F5;
+    max-height: 100vh;
+    min-height: 100vh;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

@@ -26,7 +26,7 @@ const drawerWidth = 240;
 const _options = [
     { title: 'Users', route: '/users' },
     { title: 'Pickup Agents', route: '/pickup-agents' },
-    { title: 'Pikcups', route: '/pickups' },
+    { title: 'Pickup Orders', route: '/pickups' },
     { title: 'Payout Requests', route: '/payout-request' },
     { title: 'Settings', route: '/settings' }
 ]
@@ -41,10 +41,28 @@ function Index(props) {
     const path = location.pathname.split("/");
     const appbar = React.useRef(null);
     const [appbarHeight, setAppbarHeight] = useState(0);
-    const [value, setValue] = useState("users");
+    const [value, setValue] = useState(0);
     const [openConfimation, setOpenConfimation] = useState(false)
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: light)');
-    
+
+    useEffect(() => {
+        getAdmin()
+        setAppbarHeight(appbar.current.clientHeight)
+    }, [appbar])
+
+    useEffect(() => {
+        if (!authState.id) {
+            navigate("/");
+        }
+    }, [authState])
+
+    useEffect(() => {
+        const index = _options.findIndex((item) => item.route === `/${path[2]}`)
+        console.log(index, path[2])
+        if (index > -1)
+            setValue(index)
+    }, [location.pathname])
+
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
@@ -67,6 +85,8 @@ function Index(props) {
         if (navText === "/users") setValue(0);
         else if (navText === "/pickup-agents") setValue(1)
         else if (navText === "/pickups") setValue(2)
+        else if (navText === "/payout-request") setValue(3)
+        else if (navText === "/settings") setValue(4)
     }
 
     const getAdmin = async () => {
@@ -156,21 +176,7 @@ function Index(props) {
             </Box>
         </div>
     );
-    useEffect(() => {
 
-        getAdmin()
-        setAppbarHeight(appbar.current.clientHeight)
-    }, [appbar])
-    useEffect(() => {
-        if (!authState.id) {
-            navigate("/");
-        }
-    }, [authState])
-    useState(() => {
-        if (path[2] === "users") setValue(0);
-        else if (path[2] === "students") setValue(1)
-        else if (path[2] === "settings") setValue(2)
-    }, [])
     // Remove this const when copying and pasting into your project.
     const container = windowLayout !== undefined ? () => window().document.body : undefined;
     return (
@@ -248,19 +254,17 @@ function Index(props) {
             </Box>
             <Box
                 component="main"
-                className="flex flex-1 flex-col px-5 pt-10 overflow-hidden"
+                className="flex flex-1 flex-col overflow-hidden"
                 sx={{
                     flexGrow: 1,
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                 }}
             >
-
                 <Toolbar
                     sx={{
                         display: { xs: "block", sm: "none" }
                     }}
                 />
-
                 <Outlet />
             </Box>
             <Confirmlogout openConfimation={openConfimation} setOpenConfimation={setOpenConfimation} />
