@@ -139,7 +139,6 @@ const Action = ({ action, onAction }) => (
     </Button>
 )
 
-
 const Toggle = () => (
     <AntSwitch />
 )
