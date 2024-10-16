@@ -41,7 +41,7 @@ const columns = [
 		label: 'Status',
 		minWidth: 170,
 		// align: 'right',
-		toggle: true,
+		type: 'toggle',
 		// format: (value) => value.toFixed(2),
 	},
 ];

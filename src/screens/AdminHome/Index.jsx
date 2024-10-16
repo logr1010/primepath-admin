@@ -27,7 +27,7 @@ const _options = [
     { title: 'Users', route: '/users' },
     { title: 'Pickup Agents', route: '/pickup-agents' },
     { title: 'Pickup Orders', route: '/pickups' },
-    { title: 'Payout Requests', route: '/payout-request' },
+    { title: 'Payout Requests', route: '/payout-requests' },
     { title: 'Settings', route: '/settings' }
 ]
 
@@ -85,7 +85,7 @@ function Index(props) {
         if (navText === "/users") setValue(0);
         else if (navText === "/pickup-agents") setValue(1)
         else if (navText === "/pickups") setValue(2)
-        else if (navText === "/payout-request") setValue(3)
+        else if (navText === "/payout-requests") setValue(3)
         else if (navText === "/settings") setValue(4)
     }
 

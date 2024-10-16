@@ -10,38 +10,81 @@ import DynamicTable from '../../components/DynamicTable';
 
 const columns = [
 	{
-		id: 'firstName',
-		label: 'First Name',
+		id: 'source',
+		nested: 'address',
+		label: 'Pickup',
 		minWidth: 80
 	},
 	{
-		id: 'lastName',
-		label: 'Last Name',
+		id: 'destination',
+		nested: 'address',
+		label: 'Drop',
 		minWidth: 80
 	},
 	{
-		id: 'mobile',
-		label: 'Mobile',
-		minWidth: 100
+		id: 'distance',
+		nested: 'text',
+		label: 'Distance',
+		minWidth: 50
 	},
 	{
-		id: 'email',
-		label: 'Email',
-		minWidth: 120,
+		id: 'customer',
+		nested: 'name',
+		label: 'Customer Name',
+		minWidth: 80,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
-		id: 'gender',
-		label: 'Gender',
+		id: 'customer',
+		nested: 'mobile',
+		label: 'Customer Mobile',
+		minWidth: 80,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'partner',
+		nested: 'name',
+		label: 'Partner Name',
+		minWidth: 80,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'partner',
+		nested: 'mobile',
+		label: 'Partner Mobile',
 		minWidth: 60,
 		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
-		id: 'active',
+		id: 'estimatedAmount',
+		label: 'Total Amount',
+		minWidth: 60,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'serviceRate',
+		label: 'Service Charge',
+		minWidth: 60,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'deliveryPartnerRate',
+		label: 'Partner Share',
+		minWidth: 60,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'gstAmount',
+		label: 'GST',
+		minWidth: 60,
+		format: (value) => value.toLocaleString('en-US'),
+	},
+	{
+		id: 'status',
 		label: 'Status',
 		minWidth: 170,
 		// align: 'right',
-		toggle: true,
+		// toggle: true,
 		// format: (value) => value.toFixed(2),
 	},
 ];
@@ -65,13 +108,17 @@ export default function LocalPickups() {
 
 	const getPickups = async (search) => {
 		setLoading(true)
+		const where = { where: { pickupType: "INCITY" } }
+		const include = { include: ["shipments", "partner", "customer"] }
 		const filter = search ? JSON.stringify({
 			where: {
+				...{ where },
 				"name": { "like": `${search}`, "options": "i" }
 			},
+			...include,
 			order: "createdAt DESC" // sort by createdAt in descending order
-		}) : JSON.stringify({ order: "createdAt DESC" })
-		const res = await get(`Partners?filter=${filter}`);
+		}) : JSON.stringify({ order: "createdAt DESC", ...include, ...where })
+		const res = await get(`Pickups?filter=${filter}`);
 		if (res?.statusCode === 200) {
 			setPickups(res?.data)
 		}

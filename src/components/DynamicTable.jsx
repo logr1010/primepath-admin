@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { CircularProgress, Skeleton, ToggleButton } from '@mui/material';
+import { Button, CircularProgress, Skeleton, ToggleButton } from '@mui/material';
 import { AntSwitch } from './AntSwitch';
 
 export default function DynamicTable({
@@ -17,6 +17,9 @@ export default function DynamicTable({
     loading,
     rowColorCondition,
     onRowClick = () => { },
+    onAccept = () => { },
+    onAction = () => { },
+    onReject = () => { }
 }) {
     height = height - 56 // SUBTRACTED BY PAGINATOR HEIGHT - SET STATIC HEIGHT
     const [page, setPage] = React.useState(0);
@@ -66,16 +69,24 @@ export default function DynamicTable({
                                         }
                                     }}>
                                     {columns.map((column) => {
-                                        const value = row[column.id];
+                                        const value = (column.nested ? row?.[column.id]?.[column.nested] : row[column.id]) || '--'
+                                        const _key = column.nested ? column.nested + column.id : column.id
                                         return (
-                                            <TableCell key={column.id} align={column.align}>
+                                            <TableCell key={_key} align={column.align}>
                                                 {loading ?
                                                     <Skeleton variant='text' width={100} /> :
-                                                    column.toggle ? (
-                                                        <AntSwitch />
-                                                    ) : column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
+                                                    <RenderCell
+                                                        column={column}
+                                                        value={value}
+                                                        type={column.type}
+                                                        action={column.action}
+                                                        onAction={() => onAction(row)}
+                                                        accept={column?.l1}
+                                                        reject={column?.l2}
+                                                        onAccept={() => onAccept(row)}
+                                                        onReject={() => onReject(row)}
+                                                    />
+                                                }
                                             </TableCell>
                                         );
                                     })}
@@ -97,4 +108,61 @@ export default function DynamicTable({
             />
         </Paper>
     );
+}
+
+const RenderCell = ({ type, column, value, action, onAction, accept, reject, onAccept, onReject }) => {
+    switch (type) {
+        case 'action':
+            return <Action action={action} onAction={onAction} />;
+        case 'actionMulti':
+            return <MulipleAction accept={accept} reject={reject} onAccept={onAccept} onReject={onReject} />;
+        case 'toggle':
+            return <Toggle />;
+        default:
+            return <Text column={column} value={value} />;
+    }
+};
+
+const Text = ({ column, value }) => (
+    column.format && typeof value === 'number'
+        ? column.format(value)
+        : value
+)
+
+const Action = ({ action, onAction }) => (
+    <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        onClick={onAction}>
+        {action}
+    </Button>
+)
+
+
+const Toggle = () => (
+    <AntSwitch />
+)
+
+const MulipleAction = ({ accept, reject, onAccept, onReject }) => {
+    return (
+        <div className='flex gap-4 items-center justify-center'>
+            <Button
+                variant="contained"
+                color="success"
+                size="small"
+                onClick={onAccept}
+                sx={{ textTransform: 'capitalize' }}>
+                {accept}
+            </Button>
+            <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onmClick={onReject}
+                sx={{ textTransform: 'capitalize' }}>
+                {reject}
+            </Button>
+        </div>
+    )
 }

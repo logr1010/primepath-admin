@@ -17,6 +17,8 @@ import PickupAgents from '../screens/pickupagents/PickupAgents';
 import PickupAgentDetails from '../screens/pickupagents/PickupAgentDetails';
 import PickupsIndex from '../screens/pickups/PickupIndex';
 import Pickups from '../screens/pickups/Pickups';
+import PayoutIndex from '../screens/payouts/PayoutIndex';
+import Payouts from '../screens/payouts/Payouts';
 export default function MainRoutes() {
   return (
     <Routes>
@@ -37,6 +39,9 @@ export default function MainRoutes() {
         <Route path='pickup-agents' element={<PickupAgentsIndex />}>
           <Route path='' element={<PickupAgents />} />
           <Route path=':id' element={<PickupAgentDetails />} />
+        </Route>
+        <Route path='payout-requests' element={<PayoutIndex />}>
+          <Route path='' element={<Payouts />} />
         </Route>
         <Route path='students' element={<StudentsIndex />}>
           <Route path='' element={<Students />} />
