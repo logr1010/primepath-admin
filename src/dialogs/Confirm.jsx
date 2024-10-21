@@ -41,7 +41,7 @@ export default function Confirm({
                         NO
                     </Button>
                     <Button
-                        // color='success'
+                        color='primary'
                         className='!font-semibold'
                         variant="contained"
                         onClick={onSuccess}>

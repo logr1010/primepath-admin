@@ -115,12 +115,13 @@ export default function DomesticPickups() {
 		<div className='h-full' ref={containerRef}>
 			<Box className='flex flex-col flex-1 shadow-md overflow-hidden' sx={{ maxHeight: containerRef?.current?.offsetHeight, overflow: 'auto' }}>
 				<DynamicTable
+					noClick
 					height={containerRef?.current?.offsetHeight}
 					loading={loading}
 					columns={columns}
 					rows={pickups}
 					rowColorCondition={(partner) => partner?.reject ? 'FFCDD2' : partner?.onBoarding?.toUpperCase() == 'DL' && 'FFE6A5'}
-					onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
+					// onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
 				/>
 			</Box>
 			<CustomSnackbar

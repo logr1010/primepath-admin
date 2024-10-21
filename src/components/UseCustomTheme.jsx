@@ -10,17 +10,17 @@ const UseCustomTheme = () => {
         palette: {
           mode: prefersDarkMode ? 'dark' : 'light',
           action: {
-            hoverEdit: '#1976d2',  // Green color for edit hover
+            hoverEdit: '#262626',  // Green color for edit hover
             hoverDelete: '#FF5252', // Red color for delete hover
           },
           primary: {
-            main: "#1976d2",
+            main: "#262626",
           },
           secondary: {
             main: "#eee"
           },
           hoverBlue: {
-            main: '#1976d2'
+            main: '#262626'
           },
           hoverRed: {
             main: '#eb4343'

@@ -7,6 +7,8 @@ import { get } from '../../services/api-services';
 import CustomSnackbar from '../../modules/CustomSnackbar';
 import debounce from 'lodash/debounce';
 import DynamicTable from '../../components/DynamicTable';
+import Confirm from '../../dialogs/Confirm';
+import { set } from 'lodash';
 
 const columns = [
     {
@@ -56,19 +58,21 @@ const columns = [
 
 export default function Payouts() {
     document.title = "Payout Requests"
-    const [course, setCourse] = useState({ name: '' });
-    const [courseId, setCourseId] = useState('');
     const [payouts, setPayouts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [open, setOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
     const containerRef = useRef(null);
     const [snackbar, setSnackbar] = React.useState({
         openSnackbar: false,
         message: "",
         severity: "",
     });
+
+    const [confirmMessage, setConfirmMessage] = React.useState({
+        open: false,
+        message: "",
+    });
+
     const navigate = useNavigate()
 
     const getPayoutRequests = async (search) => {
@@ -90,10 +94,21 @@ export default function Payouts() {
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
+
     const delay = useCallback(debounce(getPayoutRequests, 300), []);
     useEffect(() => {
         delay(search)
     }, [search])
+
+
+    const onAcceptOpen = (amount) => {
+        setConfirmMessage({ open: true, message: `Do you want to accept this payout request of ${amount}?` })
+    }
+
+    const onRejectOpen = (amount) => {
+        setConfirmMessage({ open: true, message: `Do you want to reject this payout request of ${amount}?` })
+    }
+
     return (
         <div className='flex-1 flex flex-col gap-4 px-4 py-6'>
             <div className='flex flex-col static gap-4 md:justify-between md:flex-row '>
@@ -104,12 +119,14 @@ export default function Payouts() {
             </div>
             <Box className='flex flex-col flex-1 shadow-md overflow-hidden' ref={containerRef} sx={{ maxHeight: containerRef?.current?.offsetHeight, overflow: 'auto' }}>
                 <DynamicTable
+                    noClick
                     height={containerRef?.current?.offsetHeight}
                     loading={loading}
                     columns={columns}
                     rows={payouts}
-                    rowColorCondition={(partner) => partner?.reject ? 'FFCDD2' : partner?.onBoarding?.toUpperCase() == 'DL' && 'FFE6A5'}
-                    onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
+                    onAccept={(req) => onAcceptOpen(req?.amount)}
+                    onReject={(req) => onRejectOpen(req?.amount)}
+                // onRowClick={(partner) => navigate(`/admin/pickup-agents/${partner?.id}`)}
                 />
             </Box>
             <CustomSnackbar
@@ -123,6 +140,13 @@ export default function Payouts() {
                 }
                 severity={snackbar.severity}
                 message={snackbar.message}
+            />
+            <Confirm
+                open={confirmMessage?.open}
+                onClose={() => setConfirmMessage({ ...confirmMessage, open: false })}
+                onSuccess={() => setConfirmMessage({ ...confirmMessage, open: false })}
+                onReject={() => setConfirmMessage({ ...confirmMessage, open: false })}
+                message={confirmMessage?.message}
             />
         </div>
     )

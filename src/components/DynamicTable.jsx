@@ -11,6 +11,7 @@ import { Button, CircularProgress, Skeleton, ToggleButton } from '@mui/material'
 import { AntSwitch } from './AntSwitch';
 
 export default function DynamicTable({
+    noClick = false,
     height,
     rows = [],
     columns,
@@ -41,9 +42,9 @@ export default function DynamicTable({
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            {columns.map((column) => (
+                            {columns.map((column,index) => (
                                 <TableCell
-                                    key={column.id}
+                                    key={index}
                                     align={column.align}
                                     style={{ minWidth: column.minWidth }}
                                 >
@@ -53,16 +54,16 @@ export default function DynamicTable({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)?.map((row) => {
+                        {rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)?.map((row, index) => {
                             const rowColor = rowColorCondition ? rowColorCondition(row) : 'inherit'; // Condition for row color
                             return (
                                 <TableRow
                                     hover
                                     role="checkbox"
                                     tabIndex={-1}
-                                    key={row.code}
+                                    key={index}
                                     onClick={() => onRowClick(row)}
-                                    sx={{
+                                    sx={noClick ? {} : {
                                         bgcolor: `#${rowColor}`,
                                         '&:hover': {
                                             cursor: 'pointer'
@@ -158,7 +159,7 @@ const MulipleAction = ({ accept, reject, onAccept, onReject }) => {
                 variant="outlined"
                 color="error"
                 size="small"
-                onmClick={onReject}
+                onClick={onReject}
                 sx={{ textTransform: 'capitalize' }}>
                 {reject}
             </Button>

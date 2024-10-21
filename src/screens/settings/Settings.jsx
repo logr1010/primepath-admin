@@ -5,7 +5,7 @@ import { get, patch, post } from '../../services/api-services';
 import { numberRegex } from '../../regex/regex';
 import DoneIcon from '@mui/icons-material/Done';
 import CustomSnackbar from '../../modules/CustomSnackbar';
-import { HomeInfo, PayoutComponent, ReadBeforeYouBook, Timings } from '../../components/SettingsComponents';
+import { HomeInfo, OfferImages, PayoutComponent, ReadBeforeYouBook, Timings } from '../../components/SettingsComponents';
 export default function Settings() {
 	document.title = "Settings"
 	const [editable, setEditable] = React.useState(false)
@@ -87,6 +87,12 @@ export default function Settings() {
 				/>
 				<Timings
 					data={settings?.timings?.data}
+					onSumbit={(data) => console.log(data)}
+				/>
+			</div>
+			<div>
+				<OfferImages
+					data={settings?.offerImages?.values}
 					onSumbit={(data) => console.log(data)}
 				/>
 			</div>

@@ -6,6 +6,10 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import ImageViewer from './ImageViewer';
+import { containers } from '../services/api-services';
+import { IconButton } from '@mui/material';
+import { Save } from '@mui/icons-material';
 
 export const PayoutComponent = ({ min = 0, max = 0, onSumbit }) => {
     const [minAmount, setMinAmount] = React.useState(min);
@@ -16,9 +20,20 @@ export const PayoutComponent = ({ min = 0, max = 0, onSumbit }) => {
         setMaxAmount(max)
     }, [min, max])
 
+    
     return (
         <Card sx={{ minWidth: 345, display: 'flex', flexDirection: 'column' }}>
-            <CardHeader title="Payout Settings" />
+            <CardHeader
+                title="Payout Settings"
+                action={
+                    <IconButton
+                        onClick={() => onSumbit()}
+                        aria-label="read"
+                    >
+                        <Save />
+                    </IconButton>
+                }
+            />
             <CardContent className='flex flex-col gap-2 flex-1'>
                 <TextField
                     label="Minimum Payout Amount"
@@ -39,17 +54,6 @@ export const PayoutComponent = ({ min = 0, max = 0, onSumbit }) => {
                     fullWidth
                 />
             </CardContent>
-            <CardActions className='flex justify-end'>
-                <Button
-                    disabled={!minAmount || !maxAmount}
-                    onClick={() => onSumbit({
-                        maxamount: maxAmount,
-                        minamount: minAmount
-                    })}
-                    variant='contained'>
-                    UPDATE
-                </Button>
-            </CardActions>
         </Card>
     )
 }
@@ -67,7 +71,17 @@ export const HomeInfo = ({ data, onSumbit }) => {
 
     return (
         <Card sx={{ minWidth: 345, display: 'flex', flexDirection: 'column' }}>
-            <CardHeader title="Home Info" />
+            <CardHeader
+                title="Home Info"
+                action={
+                    <IconButton
+                        onClick={() => onSumbit()}
+                        aria-label="read"
+                    >
+                        <Save />
+                    </IconButton>
+                }
+            />
             <CardContent className='flex flex-col gap-2 flex-1'>
                 <TextField
                     label="Info"
@@ -97,16 +111,6 @@ export const HomeInfo = ({ data, onSumbit }) => {
                     fullWidth
                 />
             </CardContent>
-            <CardActions className='flex justify-end'>
-                <Button
-                    disabled={!info || !avoid || !secure}
-                    onClick={() => onSumbit({
-                        avoid, info, secure
-                    })}
-                    variant='contained'>
-                    UPDATE
-                </Button>
-            </CardActions>
         </Card>
     )
 
@@ -133,7 +137,17 @@ export const Timings = ({ data, onSumbit }) => {
 
     return (
         <Card sx={{ minWidth: 345, display: 'flex', flexDirection: 'column' }}>
-            <CardHeader title="Timings" />
+            <CardHeader
+                title="Timings"
+                action={
+                    <IconButton
+                        onClick={() => onSumbit()}
+                        aria-label="read"
+                    >
+                        <Save />
+                    </IconButton>
+                }
+            />
             <CardContent className='flex flex-col gap-2 flex-1'>
                 <Typography variant="body1" color="text.secondary">Local</Typography>
                 <div className='flex gap-2'>
@@ -178,16 +192,6 @@ export const Timings = ({ data, onSumbit }) => {
                     />
                 </div>
             </CardContent>
-            <CardActions className='flex justify-end'>
-                <Button
-                    disabled={isDisabled()}
-                    onClick={() => onSumbit({
-                        local, domestic
-                    })}
-                    variant='contained'>
-                    UPDATE
-                </Button>
-            </CardActions>
         </Card>
     )
 
@@ -211,7 +215,17 @@ export const ReadBeforeYouBook = ({ data, onSumbit }) => {
     }
     return (
         <Card sx={{ minWidth: 345, display: 'flex', flexDirection: 'column' }}>
-            <CardHeader title="Read before you book" />
+            <CardHeader
+                title="Read before you book"
+                action={
+                    <IconButton
+                        onClick={() => onSumbit()}
+                        aria-label="read"
+                    >
+                        <Save />
+                    </IconButton>
+                }
+            />
             <CardContent className='flex flex-col gap-2 flex-1'>
                 <Typography variant="body1" color="text.secondary">Enter 5 points to diplay in read before you book</Typography>
                 <div className='flex flex-col gap-6'>
@@ -229,15 +243,33 @@ export const ReadBeforeYouBook = ({ data, onSumbit }) => {
                     ))}
                 </div>
             </CardContent>
-            <CardActions className='flex justify-end'>
-                <Button
-                    disabled={text.includes('')}
-                    onClick={() => onSumbit(text)}
-                    variant='contained'>
-                    UPDATE
-                </Button>
-            </CardActions>
         </Card>
     )
 
+}
+
+export const OfferImages = ({ data, onSumbit }) => {
+
+    return (
+        <div className='flex flex-col flex-1 overflow-hidden'>
+            <Card sx={{ minWidth: 345, display: 'flex', flexDirection: 'column' }}>
+                <CardHeader
+                    title="Offer Images"
+                    action={
+                        <IconButton
+                            onClick={() => onSumbit()}
+                            aria-label="settings"
+                        >
+                            <Save />
+                        </IconButton>
+                    }
+                />
+                <CardContent className='flex flex-wrap gap-6 flex-1'>
+                    {data?.map((item, index) => (
+                        <ImageViewer key={index} src={containers.offer + `${item}`} width={350} />
+                    ))}
+                </CardContent>
+            </Card>
+        </div>
+    )
 }
